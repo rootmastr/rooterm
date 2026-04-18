@@ -5,6 +5,9 @@
 
 echo "Starting Deployment Process..."
 
+# Force NPM to use official registry
+npm config set registry https://registry.npmjs.org/
+
 # 1. Install Dependencies for Root (Vite)
 echo "Installing Frontend dependencies..."
 npm install
