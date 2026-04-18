@@ -5,8 +5,14 @@
 
 echo "Starting Deployment Process..."
 
-# Force NPM to use official registry
+# Force NPM to use official registry and fix aaPanel quirks
 npm config set registry https://registry.npmjs.org/
+npm config delete init.module -g
+npm config delete init-module -g
+
+# Fix aaPanel cache permission issues
+mkdir -p /www/server/nodejs/cache/_logs
+chmod -R 777 /www/server/nodejs/cache 2>/dev/null || true
 
 # 1. Install Dependencies for Root (Vite)
 echo "Installing Frontend dependencies..."
