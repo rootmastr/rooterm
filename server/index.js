@@ -25,7 +25,10 @@ const io = new Server(httpServer, {
 });
 
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    // Allow all origins for now to fix the blockage
+    callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
