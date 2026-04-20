@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 .env
-.env.production
+# .env.production is now allowed to be pushed for build purposes
 server/.env
 
 # Editor directories and files
