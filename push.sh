@@ -1,40 +1,19 @@
 #!/bin/bash
+# RooTerm Smart Push 🚀
 
-# RooTerm Git Push Script 🚀 (Branch: MASTER)
+# Pastikan berada di branch master
+git branch -m main master 2>/dev/null || true
+git checkout master 2>/dev/null || git checkout -b master
 
-REPO_URL="git@github.com:rootmastr/rooterm.git"
-
-echo "Checking Git initialization..."
-
-# Initialize git if not already done
-if [ ! -d ".git" ]; then
-    echo "Initializing Git repository..."
-    git init
-    git branch -M master
-fi
-
-# Add remote if not already exists
-if ! git remote | grep -q "origin"; then
-    echo "Adding remote origin: $REPO_URL"
-    git remote add origin $REPO_URL
-else
-    echo "Remote origin already exists. Updating URL..."
-    git remote set-url origin $REPO_URL
-fi
-
-# Add all changes
-echo "Adding changes..."
+# Tambahkan perubahan
 git add .
 
-# Prompt for commit message or use default with timestamp
+# Pesan commit dengan waktu
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
-COMMIT_MSG=${1:-"Update RooTerm: Change detected at $TIMESTAMP"}
+COMMIT_MSG=${1:-"Auto-Update: $TIMESTAMP"}
 
-echo "Commiting changes with message: '$COMMIT_MSG'..."
+echo "--- 📤 Mengirim perubahan ke GitHub... ---"
 git commit -m "$COMMIT_MSG"
+git push origin master -f
 
-# Push to master branch
-echo "Pushing to GitHub (master)..."
-git push -u origin master
-
-echo "Done! ✅"
+echo "--- ✅ Selesai! Silakan jalankan 'bash update.sh' di server ---"

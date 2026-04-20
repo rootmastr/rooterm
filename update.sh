@@ -1,21 +1,27 @@
 #!/bin/bash
 # RooTerm Quick Update Script 🚀
 
-echo "--- 📥 Pulling latest code from GitHub (Master) ---"
+echo "--- 🔄 Memulai Update di Server ---"
+cd /www/wwwroot/rootmastr.space
+
+# Ambil kode terbaru dari GitHub
 git fetch --all
 git reset --hard origin/master
 
-echo "--- 📦 Installing dependencies ---"
-npm install
-cd server && npm install && cd ..
+# Perbaikan permission aaPanel
+[ -f "dist/.user.ini" ] && chattr -i dist/.user.ini || true
 
+# Install & Build Frontend
 echo "--- 🛠️ Building Frontend ---"
-# Pastikan URL API sudah benar (Port 3001)
-export VITE_API_URL="http://rootmastr.space:3001"
-VITE_API_URL=http://rootmastr.space:3001 VITE_SOCKET_URL=http://rootmastr.space:3001 npm run build
+npm install
+VITE_API_URL=http://rootmastr.space:8087 VITE_SOCKET_URL=http://rootmastr.space:8087 npm run build
 
-echo "--- 🔄 Restarting Services with PM2 ---"
-pm2 restart rooterm-backend || pm2 start server/index.js --name "rooterm-backend"
+# Install & Restart Backend
+echo "--- 🔄 Restarting Backend with PM2 ---"
+cd server && npm install && cd ..
+pm2 delete all || true
+pm2 start server/index.js --name "rooterm-backend"
 pm2 save
 
-echo "--- ✅ Update Complete! Website is live at http://rootmastr.space:8087 ---"
+echo "--- ✅ Update Berhasil! ---"
+echo "Silakan cek di: http://rootmastr.space:8087"
