@@ -26,8 +26,9 @@ fi
 echo "Adding changes..."
 git add .
 
-# Prompt for commit message or use default
-COMMIT_MSG=${1:-"Update RooTerm: Prepare for deployment on port 8087"}
+# Prompt for commit message or use default with timestamp
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+COMMIT_MSG=${1:-"Update RooTerm: Change detected at $TIMESTAMP"}
 
 echo "Commiting changes with message: '$COMMIT_MSG'..."
 git commit -m "$COMMIT_MSG"
