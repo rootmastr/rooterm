@@ -1,49 +1,53 @@
 #!/bin/bash
+# RooTerm Pro Deployment Script 🚀 (Branch: MASTER)
 
-# RooTerm Deployment Script for Server 🚀
-# Run this on your server after git clone
+set -e # Berhenti jika ada error
 
 echo "Starting Deployment Process..."
 
-# 0. Pull latest code from GitHub
-echo "Pulling latest changes from Git..."
-git pull origin main
+# 1. Perbaikan Izin Git (wajib di aaPanel)
+echo "Setting up safe directory..."
+git config --global --add safe.directory /www/wwwroot/rootmastr.space || true
 
-# Force NPM to use official registry and fix aaPanel quirks
+# 2. Ambil Kode Terbaru dari MASTER (Force Update)
+echo "Pulling latest changes from Git (master)..."
+git fetch --all
+git reset --hard origin/master
+
+# 3. Optimasi NPM & Fix aaPanel .user.ini
+echo "Configuring NPM..."
 npm config set registry https://registry.npmjs.org/
-npm config delete init.module -g
-npm config delete init-module -g
-
-# Fix aaPanel cache permission issues
+[ -f "dist/.user.ini" ] && chattr -i dist/.user.ini || true
 mkdir -p /www/server/nodejs/cache/_logs
 chmod -R 777 /www/server/nodejs/cache 2>/dev/null || true
 
-# 1. Install Dependencies for Root (Vite)
-echo "Installing Frontend dependencies..."
+# 4. Clean, Install & Build Frontend
+echo "Building Frontend..."
+rm -rf dist
 npm install
 
-# 2. Build Frontend
-echo "Building Frontend..."
-npm run build
+# Paksa URL API masuk ke build (Port 3001)
+export VITE_API_URL="http://rootmastr.space:3001"
+VITE_API_URL=http://rootmastr.space:3001 VITE_SOCKET_URL=http://rootmastr.space:3001 npm run build
 
-# 3. Install Dependencies for Server (Backend)
+# 5. Install Backend dependencies
 echo "Installing Backend dependencies..."
 cd server
 npm install
 cd ..
 
-# 4. Environment Setup (Optional/Manual)
+# 6. Pastikan file .env Backend ada
 if [ ! -f "server/.env" ]; then
-    echo "Warning: server/.env not found. Creating a default one..."
+    echo "Creating default server/.env..."
     echo "JWT_SECRET=$(openssl rand -base64 32)" > server/.env
     echo "PORT=3001" >> server/.env
     echo "NODE_ENV=production" >> server/.env
 fi
 
-# 5. Restart Services (PM2)
-# Assumes you have already added the project to aaPanel or running manually via PM2
-echo "Restarting Backend with PM2..."
+# 7. Restart Backend (PM2)
+echo "Restarting service with PM2..."
 pm2 restart rooterm-backend || pm2 start server/index.js --name "rooterm-backend"
+pm2 save
 
 echo "Deployment Finished! ✅"
-echo "Check http://111.68.31.232:8087"
+echo "Akses di: http://rootmastr.space:8087"
