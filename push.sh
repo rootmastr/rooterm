@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# RooTerm Git Push Script 🚀
+# RooTerm Git Push Script 🚀 (Branch: MASTER)
 
 REPO_URL="git@github.com:rootmastr/rooterm.git"
 
@@ -10,7 +10,7 @@ echo "Checking Git initialization..."
 if [ ! -d ".git" ]; then
     echo "Initializing Git repository..."
     git init
-    git branch -M main
+    git branch -M master
 fi
 
 # Add remote if not already exists
@@ -33,8 +33,8 @@ COMMIT_MSG=${1:-"Update RooTerm: Change detected at $TIMESTAMP"}
 echo "Commiting changes with message: '$COMMIT_MSG'..."
 git commit -m "$COMMIT_MSG"
 
-# Push to main branch
-echo "Pushing to GitHub (main)..."
-git push -u origin main
+# Push to master branch
+echo "Pushing to GitHub (master)..."
+git push -u origin master
 
 echo "Done! ✅"
