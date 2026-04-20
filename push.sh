@@ -2,7 +2,7 @@
 
 # RooTerm Git Push Script 🚀
 
-REPO_URL="https://github.com/rootmastr/rooterm.git"
+REPO_URL="git@github.com:rootmastr/rooterm.git"
 
 echo "Checking Git initialization..."
 

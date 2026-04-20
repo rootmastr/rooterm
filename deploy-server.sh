@@ -5,6 +5,10 @@
 
 echo "Starting Deployment Process..."
 
+# 0. Pull latest code from GitHub
+echo "Pulling latest changes from Git..."
+git pull origin main
+
 # Force NPM to use official registry and fix aaPanel quirks
 npm config set registry https://registry.npmjs.org/
 npm config delete init.module -g
