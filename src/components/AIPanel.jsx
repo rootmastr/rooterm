@@ -127,7 +127,7 @@ export const AIPanel = ({ isOpen, onClose, onRunCommand, sessionId }) => {
         m.id === aiResponseId ? { 
           ...m, 
           isStreaming: false,
-          text: `Error: ${error.message || "Failed to reach AI Core. Check if the Ollama server at 120.120.120.85 is accessible."}` 
+          text: `Error: ${error.message || "Failed to reach AI Core. Check if the Ollama server at 111.68.31.232 is accessible."}` 
         } : m
       ));
     } finally {

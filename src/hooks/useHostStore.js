@@ -36,7 +36,7 @@ const INITIAL_HOSTS = [
   {
     id: '5',
     name: 'ServerLab AI',
-    host: '120.120.120.85',
+    host: '111.68.31.232',
     port: 22,
     username: 'paksun',
     password: 'adminskawas',

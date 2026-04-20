@@ -119,7 +119,7 @@ sudo certbot --nginx -d domainanda.com
 1. **Password Strong**: Ganti hash password di `server/data/users.json`.
 2. **Fail2Ban**: Install `fail2ban` untuk mencegah brute force pada SSH VPS Anda.
 3. **CORS Hardening**: Di `server/index.js`, ganti `origin: '*'` menjadi domain spesifik Anda.
-4. **Ollama Access**: Pastikan IP Ollama `120.120.120.85` diizinkan di firewall VPS Anda.
+4. **Ollama Access**: Pastikan IP Ollama `111.68.31.232` diizinkan di firewall VPS Anda.
 
 ---
 

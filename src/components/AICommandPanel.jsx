@@ -132,7 +132,7 @@ export const AICommandPanel = ({ isOpen, onClose, onRunCommand, sessionId }) => 
       }
     } catch (err) {
       console.error('AI Stream Error:', err);
-      setError(`Failed to reach AI Core: ${err.message}. Ensure the backend is running and Ollama at 120.120.120.85 is accessible.`);
+      setError(`Failed to reach AI Core: ${err.message}. Ensure the backend is running and Ollama at 111.68.31.232 is accessible.`);
     } finally {
       setIsGenerating(false);
     }
