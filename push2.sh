@@ -1,17 +1,27 @@
 #!/bin/bash
-# Simpan di root folder project Laptop
+set -e
 
-echo "🚀 Memulai proses push ke GitHub..."
+echo "🚀 RooTerm Push to GitHub"
 
-# 1. Tambahkan semua perubahan
+# Check if there are changes
+if [ -z "$(git status --porcelain)" ]; then
+    echo "✅ No changes to commit"
+    exit 0
+fi
+
+# Show status
+echo "📋 Changes:"
+git status --short
+
+# Add all
 git add .
 
-# 2. Commit dengan pesan otomatis atau manual
-MESSAGE=${1:-"Update RooTerm: Fix CORS and permission issues"}
+# Commit with message or default
+MESSAGE=${1:-"deploy: $(date +'%Y-%m-%d %H:%M')"}
 git commit -m "$MESSAGE"
 
-# 3. Push ke branch main
+# Push to GitHub
+echo "📤 Pushing to GitHub..."
 git push origin main
 
-echo "✅ Berhasil update ke GitHub!"
-
+echo "✅ Done! Server can now pull changes."

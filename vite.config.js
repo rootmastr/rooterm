@@ -11,6 +11,6 @@ export default defineConfig({
   preview: {
     allowedHosts: true,
     host: true,
-    port: 8088
+    port: 8087
   }
 })

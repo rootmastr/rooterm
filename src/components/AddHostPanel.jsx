@@ -45,7 +45,9 @@ const ActionItem = ({ icon: Icon, label, value, color = "text-text-muted" }) => 
   </div>
 );
 
-export const AddHostPanel = ({ isOpen, onClose, onAdd, hosts = [] }) => {
+export const AddHostPanel = ({ isOpen, onClose, onAdd, onUpdate, editHost, hosts = [] }) => {
+  const isEditMode = !!editHost;
+
   const [formData, setFormData] = useState({
     name: '',
     host: '',
@@ -56,13 +58,33 @@ export const AddHostPanel = ({ isOpen, onClose, onAdd, hosts = [] }) => {
     authType: 'password'
   });
 
+  // Update form when editHost changes
+  React.useEffect(() => {
+    if (editHost) {
+      setFormData({
+        name: editHost.name || '',
+        host: editHost.host || '',
+        port: String(editHost.port || '22'),
+        username: editHost.username || '',
+        password: editHost.password || '',
+        group: editHost.group || 'Personal vault',
+        authType: editHost.authType || 'password'
+      });
+    } else {
+      setFormData({ name: '', host: '', port: '22', username: '', password: '', group: 'Personal vault', authType: 'password' });
+    }
+  }, [editHost, isOpen]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.host || !formData.username) return;
-    onAdd(formData);
+    
+    if (isEditMode) {
+      onUpdate(editHost.id, formData);
+    } else {
+      onAdd(formData);
+    }
     onClose();
-    // Reset but keep some defaults
-    setFormData({ name: '', host: '', port: '22', username: '', password: '', group: 'Personal vault', authType: 'password' });
   };
 
   return (
@@ -76,7 +98,7 @@ export const AddHostPanel = ({ isOpen, onClose, onAdd, hosts = [] }) => {
       <div className="p-4 border-b border-border flex items-center justify-between bg-surface/30 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <h3 className="text-sm font-bold text-white">New Host</h3>
+            <h3 className="text-sm font-bold text-white">{isEditMode ? 'Edit Host' : 'New Host'}</h3>
             <div className="flex items-center gap-1.5 cursor-pointer hover:text-white transition-colors text-text-muted">
               <span className="text-[10px] font-bold uppercase tracking-widest">{formData.group}</span>
               <ChevronRight size={10} className="rotate-90" />
@@ -205,12 +227,12 @@ export const AddHostPanel = ({ isOpen, onClose, onAdd, hosts = [] }) => {
            >
              Cancel
            </button>
-           <button 
-             onClick={handleSubmit}
-             className="flex-[2] px-4 py-2 bg-accent hover:bg-accent-dark text-background rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-accent/20 active:scale-95"
-           >
-             Create Host
-           </button>
+            <button 
+              onClick={handleSubmit}
+              className="flex-[2] px-4 py-2 bg-accent hover:bg-accent-dark text-background rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-accent/20 active:scale-95"
+            >
+              {isEditMode ? 'Update Host' : 'Create Host'}
+            </button>
         </div>
       </div>
     </motion.div>

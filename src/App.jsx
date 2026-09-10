@@ -19,6 +19,7 @@ function App() {
   const {
     hosts,
     addHost,
+    updateHost,
     activeTabs,
     activeTabId,
     setActiveTabId,
@@ -31,6 +32,7 @@ function App() {
   } = useHostStore();
 
   const [isAddPanelOpen, setIsAddPanelOpen] = useState(false);
+  const [editingHost, setEditingHost] = useState(null);
   const [hostToDelete, setHostToDelete] = useState(null);
   const { isOpen: isAIPanelOpen, toggle: toggleAIPanel, close: closeAIPanel } = useContext(AIContext);  
 
@@ -40,6 +42,7 @@ function App() {
       // Ctrl+N (or Cmd+N on mac)
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
         e.preventDefault();
+        setEditingHost(null);
         setIsAddPanelOpen(true);
       }
     };
@@ -94,7 +97,10 @@ function App() {
   return (
     <div className="flex flex-col h-screen bg-background text-text-primary overflow-hidden select-none font-sans">
       <TopBar 
-        onAddHost={() => setIsAddPanelOpen(true)}
+        onAddHost={() => {
+          setEditingHost(null);
+          setIsAddPanelOpen(true);
+        }}
       />
       
       <div className="flex flex-1 overflow-hidden relative">
@@ -102,7 +108,13 @@ function App() {
           hosts={hosts} 
           activeHostId={activeHost?.id}
           onConnect={connectToHost} 
-          onEdit={(id) => { console.log('Edit', id); setIsAddPanelOpen(true); }}
+          onEdit={(id) => {
+            const host = hosts.find(h => h.id === id);
+            if (host) {
+              setEditingHost(host);
+              setIsAddPanelOpen(true);
+            }
+          }}
           onDelete={(id) => setHostToDelete(id)}
           onRenameGroup={renameGroup}
           onDeleteGroup={deleteGroup}
@@ -202,8 +214,13 @@ function App() {
 
       <AddHostPanel 
         isOpen={isAddPanelOpen} 
-        onClose={() => setIsAddPanelOpen(false)} 
-        onAdd={addHost} 
+        onClose={() => {
+          setIsAddPanelOpen(false);
+          setEditingHost(null);
+        }} 
+        onAdd={addHost}
+        onUpdate={updateHost}
+        editHost={editingHost}
         hosts={hosts}
       />
 
