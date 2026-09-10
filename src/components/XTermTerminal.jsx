@@ -53,6 +53,8 @@ const XTermTerminal = forwardRef(({
     // Initialize Terminal
     const term = new Terminal({
       cursorBlink: true,
+      scrollback: 10000,
+      allowProposedApi: true,
       theme: {
         background: '#0D1117',
         foreground: '#C9D1D9',
@@ -82,6 +84,12 @@ const XTermTerminal = forwardRef(({
     if (onData) {
       term.onData(onData);
     }
+
+    // Handle special keys to ensure proper escape sequences
+    term.attachCustomKeyEventHandler((e) => {
+      // Allow all keys to pass through
+      return true;
+    });
 
     // Handle Resize logic
     if (onResize) {

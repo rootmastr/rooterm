@@ -105,6 +105,15 @@ export const TerminalTab = ({ host, active, tabId }) => {
         if (event === 'READY') {
           setStatus('ready');
           connectionInProgressRef.current = false;
+          
+          // Send initial resize to match terminal dimensions
+          if (terminalRef.current) {
+            const term = terminalRef.current.terminal;
+            if (term) {
+              sshClient.resize(tabId, term.cols, term.rows);
+            }
+          }
+          
           const token = localStorage.getItem('rootmastr_token');
           fetch(`${API_URL}/server/context/${tabId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -163,6 +172,10 @@ export const TerminalTab = ({ host, active, tabId }) => {
   const handleResize = useCallback(({ cols, rows }) => {
     if (cols > 0 && rows > 0) {
       sshClient.resize(tabId, cols, rows);
+      // Also write a small update to refresh the terminal
+      if (terminalRef.current) {
+        terminalRef.current.write('');
+      }
     }
   }, [tabId]);
 
